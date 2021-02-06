@@ -8,7 +8,7 @@ row = 10
 tablecount = col * row
 playercount = col * row
 
-g = game()
+g = game(col, row)
 
 p = player(playercount)
 p.setPlayers()
