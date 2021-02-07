@@ -39,17 +39,18 @@ class game:
                 idx = idx + 1
 
 
+URL = 'http://names.drycodes.com'
+
 class player:
     
     def __init__(self, count):
         self.count = count
 
     def setPlayers(self):
-        self.URL = 'http://names.drycodes.com'
         
         if type(self.count) is int:
             if self.count > 0:
-                response = requests.get(f'{self.URL}/{str(self.count)}')
+                response = requests.get(f'{URL}/{str(self.count)}')
                 self.players_data = json.loads(response.text)
                 
                 while(self.checkDuplicatePlayer()):
@@ -63,7 +64,7 @@ class player:
         self.players_data = list(set(self.players_data))
 
     def addNewPlayer(self):
-        response = requests.get(f'{self.URL}/{str(self.count - len(list(set(self.players_data))))}')
+        response = requests.get(f'{URL}/{str(self.count - len(list(set(self.players_data))))}')
         new_data = json.loads(response.text)
         self.players_data = self.players_data + new_data
 
@@ -83,7 +84,7 @@ class seeker:
         
         if self.coldistance == 0 and self.rowdistance == 0:
             print(f'seeked hider! hider: {g.hider}') 
-            return  True
+            return True
         else:
             if abs(self.coldistance) > (col / 3) * 3:
                 print('col: far')

@@ -9,13 +9,14 @@ tablecount = col * row
 playercount = col * row
 
 g = game(col, row)
+# g.setGame()
 
 p = player(playercount)
 p.setPlayers()
 
 
 print('----------------------------tables------------------------------')
-print(g.boxes_data)
+# print(g.boxes_data)
 
 print('----------------------------players------------------------------')
 print(p.players_data)
