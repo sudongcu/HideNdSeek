@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hide & Seek!</title>
+    <link rel="stylesheet" href="/static/css/hidendseek.css">
+    <script src="/static/js/jquery-3.5.1.min.js"></script>
+
+    <script>
+        
+        var names = [['qamanager_manson', 'dgseo_male', 'fish_killer'], ['winger_winger', 'door_closer', 'soloforever_ever'], ['rose_flowerman', 'oxford_bookworm', 'sun_glassmaker']]
+
+        // TODO: 박스 클릭 이벤트
+        var trySeek = function(col, row) {
+
+            document.getElementById("box" + col + row).className = "show-box";
+            document.getElementById("box" + col + row).innerText = names[col][row].replace(/_/g, "\n");
+
+            if (names[col][row] == "dgseo_male") {
+                alert('dgseo_male is over.');
+
+                // testcall(4, 4);
+            }
+        }
+        
+        var gameStart = function() {
+            
+            var col = $('#coltext').val()
+            var row = $('#coltext').val()
+            
+            if (col == undefined || col == null || col == '' || col == 0) {
+                col = 1;
+            }
+            if (row == undefined || row == null || row == '' || row == 0) {
+                row = 1;
+            }
+
+            $.ajax({
+                url: 'http://' + document.domain + ':5000/start?col=' + col + '&row=' + row,
+                type: 'get',
+                contentType: 'application/json',
+                success: function(data){
+                    // console.log(data);
+                    drawMap(data);
+                },
+                error : function(xtr,status,error){
+                    alert('Failed to get datas.');
+                }
+            });
+        }
+
+        var drawMap = function(data) {
+
+            var map;
+            var hider = '';
+
+            $.each(data, function(key, value) {
+
+                if (key == 'hider')
+                    hider = value;                
+                else if (key == 'map')
+                    map = value;
+                else
+                    return false;
+                
+            });
+
+            console.log('hider: ' + hider);
+            console.log(map);
+
+            // TODO: table 그리기
+
+            // TODO: 게임 시작 시 textbox and button 숨김
+
+
+            // $('#tableMap').html(map);
+        }
+
+
+    </script>
+</head>
+<body>
+    <div class="off" >
+        <table id="tableMap">
+            <tr>
+                <td>
+                    <div class="hide-box" id="box00" onclick="trySeek(0, 0)"></div>
+                </td>
+                <td>
+                    <div class="hide-box" id="box01" onclick="trySeek(0, 1)"></div>
+                </td>
+                <td>
+                    <div class="hide-box" id="box02" onclick="trySeek(0, 2)"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="hide-box" id="box10" onclick="trySeek(1, 0)"></div>
+                </td>
+                <td>
+                    <div class="hide-box" id="box11" onclick="trySeek(1, 1)"></div>
+                </td>
+                <td>
+                    <div class="hide-box" id="box12" onclick="trySeek(1, 2)"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="hide-box" id="box20" onclick="trySeek(2, 0)"></div>
+                </td>
+                <td>
+                    <div class="hide-box" id="box21" onclick="trySeek(2, 1)"></div>
+                </td>
+                <td>
+                    <div class="hide-box" id="box22" onclick="trySeek(2, 2)"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="on">
+
+        <input type="text" id="coltext" value="">
+        <input type="text" id="rowtext" value="">
+        <input type="button" class="button" value="Start" onclick="gameStart();" />
+    </div>
+</body>
+
+</html>
