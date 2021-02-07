@@ -19,13 +19,13 @@ class game:
         
         self.setMap(p)
         self.hider = random.choice(p.players_data)
-        self.hiderspot = []
+        self.hidespot = []
         
         for c in range(self.col):
             for r in range(self.row):
                 if self.hider == self.game_map[c][r]:
-                    self.hiderspot.append(c)
-                    self.hiderspot.append(r)
+                    self.hidespot.append(c)
+                    self.hidespot.append(r)
                     break
 
     def setMap(self, p):        
@@ -78,8 +78,8 @@ class seeker:
         self.seekedplayer = g.game_map[self.tryspot[0]][self.tryspot[1]]
         print(f'seeked: {self.seekedplayer}')
 
-        self.coldistance = self.tryspot[0] - g.hiderspot[0] 
-        self.rowdistance = self.tryspot[1] - g.hiderspot[1]
+        self.coldistance = self.tryspot[0] - g.hidespot[0] 
+        self.rowdistance = self.tryspot[1] - g.hidespot[1]
         
         if self.coldistance == 0 and self.rowdistance == 0:
             print(f'seeked hider! hider: {g.hider}') 
