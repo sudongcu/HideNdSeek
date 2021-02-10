@@ -4,10 +4,10 @@ import random
 
 class game:
 
-    def __init__(self, col, row):
-        self.col = col
+    def __init__(self, row, col):
         self.row = row
-        self.count = col * row
+        self.col = col
+        self.count = row * col
     
     def setGame(self):        
         self.boxes_data = []
@@ -21,21 +21,21 @@ class game:
         self.hider = random.choice(p.players_data)
         self.hidespot = []
         
-        for c in range(self.col):
-            for r in range(self.row):
-                if self.hider == self.game_map[c][r]:
-                    self.hidespot.append(c)
+        for r in range(self.row):
+            for c in range(self.col):
+                if self.hider == self.game_map[r][c]:
                     self.hidespot.append(r)
+                    self.hidespot.append(c)
                     break
 
     def setMap(self, p):        
         self.game_map = []
         
         idx = 0        
-        for c in range(self.col):
+        for r in range(self.row):
             self.game_map.append([])
-            for r in range(self.row):
-                self.game_map[c].append(p.players_data[idx])
+            for c in range(self.col):
+                self.game_map[r].append(p.players_data[idx])
                 idx = idx + 1
 
 
@@ -70,31 +70,22 @@ class player:
 
 
 class seeker:
-    
+
     def __init__(self):
         pass
 
-    def trySeek(self, col, row, g):
-        self.tryspot = [col, row]
+    def trySeek(self, row, col, g):
+        self.tryspot = [row, col]
         self.seekedplayer = g.game_map[self.tryspot[0]][self.tryspot[1]]
         print(f'seeked: {self.seekedplayer}')
 
-        self.coldistance = self.tryspot[0] - g.hidespot[0] 
-        self.rowdistance = self.tryspot[1] - g.hidespot[1]
+        self.rowdistance = self.tryspot[0] - g.hidespot[0] 
+        self.coldistance = self.tryspot[1] - g.hidespot[1]
         
-        if self.coldistance == 0 and self.rowdistance == 0:
+        if self.rowdistance == 0 and self.coldistance == 0:
             print(f'seeked hider! hider: {g.hider}') 
             return True
         else:
-            if abs(self.coldistance) > (col / 3) * 3:
-                print('col: far')
-            elif abs(self.coldistance) > (col / 3) * 2:
-                print('col: little far')
-            elif abs(self.coldistance) > (col / 3):
-                print('col: closed')
-            else:
-                print('col: super closed')
-
             if abs(self.rowdistance) > (row / 3) * 3:
                 print('row: far')
             elif abs(self.rowdistance) > (row / 3) * 2:
@@ -103,5 +94,14 @@ class seeker:
                 print('row: closed')
             else:
                 print('row: super closed')
+
+            if abs(self.coldistance) > (col / 3) * 3:
+                print('col: far')
+            elif abs(self.coldistance) > (col / 3) * 2:
+                print('col: little far')
+            elif abs(self.coldistance) > (col / 3):
+                print('col: closed')
+            else:
+                print('col: super closed')
 
             return False

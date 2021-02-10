@@ -1,25 +1,30 @@
 from playgame import game
+from playgame import player
 from playgame import seeker
 
-col = 10
-row = 10
+row = 2
+col = 5
 
-g = game(col, row)
+g = game(row, col)
 g.setGame()
 
-s = seeker()
+print(g.game_map)
+print(g.hidespot)
 
-count = 0
-hiderSeeked = False
-for c in range(col):
-    for r in range(row):
-        print('----------------------------tryseek----------------------------')
-        count = count + 1
-        if s.trySeek(c, r, g):
-            hiderSeeked = True
-            break
+
+# s = seeker()
+
+# count = 0
+# hiderSeeked = False
+# for c in range(col):
+#     for r in range(row):
+#         print('----------------------------tryseek----------------------------')
+#         count = count + 1
+#         if s.trySeek(c, r, g):
+#             hiderSeeked = True
+#             break
     
-    if hiderSeeked:
-        break
+#     if hiderSeeked:
+#         break
         
-print(f'total try count: {count}')
+# print(f'total try count: {count}')
