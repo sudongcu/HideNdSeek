@@ -52,14 +52,12 @@ class game:
 class player:
     
     def __init__(self, count):
+        config = ConfigParser()
+        config.read('./config/config.ini')
+        self.URL = config.get('game', 'url')
         self.count = count
 
-        self.config = ConfigParser()
-        self.config.read('./config/config.ini')
-        self.URL = self.config.get('game', 'url')
-
     def setPlayers(self):
-        
         if type(self.count) is int:
             if self.count > 0:
                 response = requests.get(f'{self.URL}/{str(self.count)}')
@@ -88,43 +86,34 @@ class seeker:
         pass
 
     def trySeek(self, row, col, gameKey):
-        self.gameKeyList = gameKey.split(':')   # gameKey = hider:row:col        
-        self.hider = self.gameKeyList[0]
-        self.rowdistance = int(self.gameKeyList[1]) - row 
-        self.coldistance = int(self.gameKeyList[2]) - col
+        gameKeyList = gameKey.split(':')   # gameKey = hider:row:col
+        hider = gameKeyList[0]
+        rowdistance = int(gameKeyList[1]) - row 
+        coldistance = int(gameKeyList[2]) - col
         
-        if self.rowdistance == 0 and self.coldistance == 0:
-            print('You sought hider!')
-            self.message = 'You sought hider!'
+        if rowdistance == 0 and coldistance == 0:
+            self.message = f'You sought {hider}!'
             return True
         else:
-            self.message = f'row: {self.RowMessage(self.rowdistance, row)}, col: {self.ColMessage(self.coldistance, col)}'
+            self.message = f'row: {self.rowMessage(rowdistance, row)}, col: {self.colMessage(coldistance, col)}'
             return False
 
-    def RowMessage(self, distance, row):
+    def rowMessage(self, distance, row):
         if abs(distance) > (row / 3) * 3:
-            print('row: far')
             return 'far'
         elif abs(distance) > (row / 3) * 2:
-            print('row: little far')
             return 'little far'
         elif abs(distance) > (row / 3):
-            print('row: closed')
             return 'closed'
         else:
-            print('row: very closed')
             return 'very closed'
         
-    def ColMessage(self, distance, col):
+    def colMessage(self, distance, col):
         if abs(distance) > (col / 3) * 3:
-            print('col: far')
             return 'far'
         elif abs(distance) > (col / 3) * 2:
-            print('col: little far')
             return 'little far'
         elif abs(distance) > (col / 3):
-            print('col: closed')
             return 'closed'
         else:
-            print('col: veru closed')
             return 'veru closed'
