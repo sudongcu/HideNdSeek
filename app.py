@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request
-from playgame import game
+from playgame import game, seeker
 
 app = Flask(__name__)
 
@@ -16,13 +16,21 @@ def start():
     g = game(row, col)  
     g.setGame()
 
-    data = {'map':g.game_map, 'hider':g.hider}
+    data = {'map':g.game_map, 'hider':g.hider, 'gameKey':g.gameKey}
     return jsonify(data)
 
-# @app.route('/seek')
-# def seek():
+@app.route('/seek')
+def seek():
+    row = int(request.args['row'])
+    col = int(request.args['col'])
+    gameKey = int(request.args['gameKey'])
     
-#     return  jsonify('')
+    s = seeker()
+    code = '0' if s.trySeek(row, col,  gameKey) else '1'
+    message = s.message
+    
+    data = {'code':code, 'message':message}
+    return  jsonify(data)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -56,6 +56,7 @@
 
             let map;
             let hider;
+            let gameKey;
             let tableMap = '';
             let boxId = '';
 
@@ -65,6 +66,8 @@
                     hider = value;
                 else if (key == 'map')
                     map = value;
+                else if (key == 'gameKey')
+                    gameKey = value;
                 else
                     return false;
             });
@@ -75,6 +78,10 @@
             }
             if (map == undefined || map == null) {
                 alert('Map Error.\rRestart Game.');
+                return;
+            }
+            if (gameKey == undefined || gameKey == null || gameKey == '') {
+                alert('GameKey Create Error.\rRestart Game.');
                 return;
             }
 
@@ -92,7 +99,7 @@
                 tableMap += '</tr>';
             }
 
-            $("#hiddenHider").val(hider);
+            $("#hiddenGameKey").val(gameKey);
             $("#hider").html(hider + '.');
             $('#tableMap').html(tableMap);
 
@@ -105,27 +112,46 @@
 
         let trySeek = function (row, col) {
 
+            const gameKey = $("#hiddenGameKey").val();
+            
             $.ajax({
-                url: 'http://' + document.domain + ':5000/seek?row=' + row + '&col=' + col,
+                url: 'http://' + document.domain + ':5000/seek?row=' + row + '&col=' + col + '&gameKey=' + gameKey,
                 type: 'get',
                 contentType: 'application/json',
                 success: function (data) {
-                    drawMap(data);
+                    openBox(data, row, col);
                 },
                 error: function (xtr, status, error) {
                     alert('Failed to get datas.');
                 }
             });
+        }
 
-            if (row == 1 && col == 0) {
+        let openBox = function(data, row, col) {
+
+            const code;
+            const message;
+            
+            $.each(data, function (key, value) {
+
+                if (key == 'code')
+                    code = value;
+                else if (key == 'message')  
+                    message = value;
+                else
+                    return false;
+            });
+
+            if (code == '0') {
                 $("#box" + row + col).attr('class', 'seek-box');
-
-                alert('You sought hider!');
+                alert(message);
+                
                 $('#divSetting').attr('class', 'on');
                 $('#textRow').focus();
             }
             else {
                 $("#box" + row + col).attr('class', 'show-box');
+                alert(message);
             }
         }
 
@@ -139,7 +165,7 @@
         <input type="button" class="button" value="Start" onclick="gameStart();" />
     </div>
     <div id="divGame" class="off ">
-        <input type="hidden" id="hiddenHider" value="" />
+        <input type="hidden" id="hiddenGameKey" value="" />
         <p>You should seek <b><span id="hider" class="labelhider"></span></b></p>
         <table id="tableMap">
         </table>
