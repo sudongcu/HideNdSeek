@@ -32,18 +32,20 @@ class game:
                     break
             if isnothidespotempty:
                 break
-        
+
         self.setGameKey(self.hider, self.hidespot[0], self.hidespot[1])
 
-    def setMap(self, p):        
+    def setMap(self, p):
         self.game_map = []
         
-        idx = 0        
+        idx = 0
         for r in range(self.row):
             self.game_map.append([])
-            for c in range(self.col):
+            colcnt = 0
+            while(self.col > colcnt):
                 self.game_map[r].append(p.players_data[idx])
                 idx = idx + 1
+                colcnt = colcnt + 1
 
     def setGameKey(self, hider, row, col):
         self.gameKey = f'{hider}:{str(row)}:{str(col)}'
