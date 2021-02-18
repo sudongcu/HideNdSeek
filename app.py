@@ -23,7 +23,7 @@ def start():
 def seek():
     row = int(request.args['row'])
     col = int(request.args['col'])
-    gameKey = int(request.args['gameKey'])
+    gameKey = request.args['gameKey']
     
     s = seeker()
     code = '0' if s.trySeek(row, col,  gameKey) else '1'

@@ -92,10 +92,10 @@ class seeker:
         coldistance = int(gameKeyList[2]) - col
         
         if rowdistance == 0 and coldistance == 0:
-            self.message = f'You sought {hider}!'
+            self.message = f"You sought '{hider}'."
             return True
         else:
-            self.message = f'row: {self.rowMessage(rowdistance, row)}, col: {self.colMessage(coldistance, col)}'
+            self.message = f'Row: {self.rowMessage(rowdistance, row)}\rCol: {self.colMessage(coldistance, col)}'
             return False
 
     def rowMessage(self, distance, row):
@@ -116,4 +116,4 @@ class seeker:
         elif abs(distance) > (col / 3):
             return 'closed'
         else:
-            return 'veru closed'
+            return 'very closed'

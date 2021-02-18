@@ -10,34 +10,49 @@
     <script src="/static/js/jquery-3.5.1.min.js"></script>
     <script>
         
-        let gameStart = function () {
+        let isGameStartValid = function (row, col) {
 
             const minvalue = 3;
             const maxvalue = 10;
 
-            const row = $('#textRow').val();
-            const col = $('#textCol').val();
+            if (row == undefined || row == null || row == ''
+                || col == undefined || col == null || col == '') {
+                alert('Empty value is not allowed');
+                return false;
+            }
 
-            if (row == undefined || row == null || row == '' || row < minvalue) {
+            if (row < minvalue) {
                 alert('Row\'s minimum value is 3');
                 $('#textRow').focus();
-                return;
+                return false;
             }
-            if (col == undefined || col == null || col == '' || col < minvalue) {
+            if (col < minvalue) {
                 alert('Col\' minimum value is 3');
                 $('#textCol').focus();
-                return;
+                return false;
             }
-            if (row > maxvalue && col > maxvalue) {
-                alert('Maximum value is 10');
-                
-                if (row > maxvalue)
-                    $('#textRow').focus();
-                else
-                    $('#textCol').focus();
 
-                return;
+            if (row > maxvalue) {
+                alert('Row\'s Maximum value is 10');
+                $('#textRow').focus();
+                return false;
             }
+            if (col > maxvalue) {
+                alert('Col\'s Maximum value is 10');
+                $('#textCol').focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        let gameStart = function () {
+
+            const row = $('#textRow').val();
+            const col = $('#textCol').val();
+            
+            if (!isGameStartValid(row,  col))
+                return;
             
             $.ajax({
                 url: 'http://' + document.domain + ':5000/start?row=' + row + '&col=' + col,
@@ -110,9 +125,17 @@
             $('#textCol').val('');
         }
 
+        let isTrySeekValid = function (row, col) {
+            
+            return $("#box" + row + col).hasClass('hide-box');                
+        }
+
         let trySeek = function (row, col) {
 
-            const gameKey = $("#hiddenGameKey").val();
+            if (!isTrySeekValid(row, col))
+                return;
+
+            let gameKey = $("#hiddenGameKey").val();
             
             $.ajax({
                 url: 'http://' + document.domain + ':5000/seek?row=' + row + '&col=' + col + '&gameKey=' + gameKey,
@@ -127,10 +150,10 @@
             });
         }
 
-        let openBox = function(data, row, col) {
+        let openBox = function (data, row, col) {
 
-            const code;
-            const message;
+            let code;
+            let message;
             
             $.each(data, function (key, value) {
 
@@ -143,7 +166,11 @@
             });
 
             if (code == '0') {
+
+                let hider = $('#hider').text().replace('_', '\n');
+
                 $("#box" + row + col).attr('class', 'seek-box');
+                $("#box" + row + col).html(hider);
                 alert(message);
                 
                 $('#divSetting').attr('class', 'on');
