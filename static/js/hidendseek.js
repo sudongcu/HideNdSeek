@@ -123,11 +123,15 @@ let trySeek = function (row, col) {
     if (!isTrySeekValid(row, col))
         return;
 
-    let gameKey = $("#hiddenGameKey").val();
+    let gameKey = encodeURIComponent($("#hiddenGameKey").val());
     
+    //TODO: POST로 값 보내기 
     $.ajax({
-        url: 'http://' + document.domain + ':5000/seek?row=' + row + '&col=' + col + '&gameKey=' + gameKey,
-        type: 'get',
+        url: 'http://' + document.domain + ':5000/seek?row=' + row + '&col=' + col,
+        type: 'post',
+        data: {
+            'gameKey': gameKey
+        },
         contentType: 'application/json',
         success: function (data) {
             openBox(data, row, col);

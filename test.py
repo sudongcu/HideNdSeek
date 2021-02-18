@@ -2,7 +2,18 @@ from playgame import game
 from playgame import player
 import random
 
-# from Crypto.Cipher import AES
+from security.crypto import AESCrypto
+
+data = 'dgseo'
+
+aes = AESCrypto()
+
+encdata = aes.Encrypt(data)
+print(encdata)
+
+decdata = aes.Decrypt(encdata[0], encdata[1], encdata[2])
+print(decdata)
+
 
 col = 20
 row = 10

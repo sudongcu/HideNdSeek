@@ -1,6 +1,7 @@
 from playgame import game
 from playgame import player
 from playgame import seeker
+from urllib import parse
 
 row = 2
 col = 5
@@ -10,6 +11,11 @@ g.setGame()
 
 print(g.game_map)
 print(g.hidespot)
+print(g.gameKey)
+
+data = {'map':g.game_map, 'hider':g.hider, 'gameKey':g.gameKey}
+print(data)
+
 
 
 # s = seeker()

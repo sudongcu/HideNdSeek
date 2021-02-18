@@ -1,4 +1,5 @@
 from configparser import ConfigParser
+from security.crypto import AESCrypto
 import requests
 import json
 import random
@@ -48,8 +49,10 @@ class game:
                 colcnt = colcnt + 1
 
     def setGameKey(self, hider, row, col):
-        self.gameKey = f'{hider}:{str(row)}:{str(col)}'
-
+        keyData = f'{hider}:{str(row)}:{str(col)}'
+        aes = AESCrypto()
+        encData = aes.Encrypt(keyData)
+        self.gameKey = f'{encData[0]},{encData[1]},{encData[2]}'
 
 class player:
     
@@ -88,10 +91,14 @@ class seeker:
         pass
 
     def trySeek(self, row, col, gameKey):
-        gameKeyList = gameKey.split(':')   # gameKey = hider:row:col
-        hider = gameKeyList[0]
-        rowdistance = int(gameKeyList[1]) - row 
-        coldistance = int(gameKeyList[2]) - col
+        encdata = gameKey.split(',')
+        aes = AESCrypto()
+        keyData = aes.Decrypt(encData[0], encData[1], encData[2])
+
+        keyDatas = keyData.split(':')   # gameKey = hider:row:col
+        hider = keyDatas[0]
+        rowdistance = int(keyDatas[1]) - row 
+        coldistance = int(keyDatas[2]) - col
         
         if rowdistance == 0 and coldistance == 0:
             self.message = f"You sought '{hider}'."
