@@ -1,0 +1,1 @@
+from main.data.staticplayers import StaticPlayers

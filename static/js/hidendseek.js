@@ -59,9 +59,11 @@ let drawMap = function (data) {
 
     let map;
     let hider;
-    let gameKey;
     let tableMap = '';
     let boxId = '';
+    
+    let gameKey;
+    let checkGameKey = true;
 
     $.each(data, function (key, value) {
 
@@ -83,7 +85,27 @@ let drawMap = function (data) {
         alert('Map Error.\rRestart Game.');
         return;
     }
-    if (gameKey == undefined || gameKey == null || gameKey == '') {
+    if (gameKey == undefined || gameKey == null) {
+        alert('GameKey Create Error.\rRestart Game.');
+        return;
+    }
+
+    $.each(gameKey, function (key, value) {
+        if (key == 'key')
+            $('#hiddenKey').val(value);
+        else if (key == 'tag')
+            $('#hiddenTag').val(value);
+        else if (key == 'nonce')
+            $('#hiddenNonce').val(value);
+        
+        if (value == null || value == undefined || value == '')
+        {
+            checkGameKey = false;
+            return false;
+        }
+    });
+
+    if (!checkGameKey) {
         alert('GameKey Create Error.\rRestart Game.');
         return;
     }
@@ -102,8 +124,7 @@ let drawMap = function (data) {
         tableMap += '</tr>';
     }
 
-    $("#hiddenGameKey").val(gameKey);
-    $("#hider").html(hider + '.');
+    $("#hider").html(hider);
     $('#tableMap').html(tableMap);
 
     $('#divSetting').attr('class', 'off');
@@ -123,15 +144,21 @@ let trySeek = function (row, col) {
     if (!isTrySeekValid(row, col))
         return;
 
-    let gameKey = encodeURIComponent($("#hiddenGameKey").val());
-    
-    //TODO: POST로 값 보내기 
+    let key = encodeURIComponent($("#hiddenKey").val());
+    let tag = encodeURIComponent($("#hiddenTag").val());    
+    let nonce = encodeURIComponent($("#hiddenNonce").val());
+
+    const postdata = {
+        'row': row,
+        'col': col,
+        'gameKey': { 'key': key, 'tag': tag, 'nonce': nonce }
+    };
+
     $.ajax({
-        url: 'http://' + document.domain + ':5000/seek?row=' + row + '&col=' + col,
+        url: 'http://' + document.domain + ':5000/seek',
         type: 'post',
-        data: {
-            'gameKey': gameKey
-        },
+        data: JSON.stringify(postdata),
+        dataType: "json",
         contentType: 'application/json',
         success: function (data) {
             openBox(data, row, col);

@@ -1,22 +1,23 @@
 from configparser import ConfigParser
-from security.crypto import AESCrypto
+from main.security.crypto import AESCrypto
+from main.data.staticplayers import StaticPlayers
 import requests
 import json
 import random
 
-class game:
+class Game:
 
     def __init__(self, row, col):
         self.row = row
         self.col = col
         self.count = row * col
 
-    def setGame(self):        
+    def setGame(self):
         self.boxes_data = []
         for i in range(self.count):
             self.boxes_data.append(i)
     
-        p = player(self.count)
+        p = Player(self.count)
         p.setPlayers()
         
         self.setMap(p)
@@ -52,9 +53,9 @@ class game:
         keyData = f'{hider}:{str(row)}:{str(col)}'
         aes = AESCrypto()
         encData = aes.Encrypt(keyData)
-        self.gameKey = f'{encData[0]},{encData[1]},{encData[2]}'
+        self.gameKey = [encData[0], encData[1], encData[2]]
 
-class player:
+class Player:
     
     def __init__(self, count):
         config = ConfigParser()
@@ -66,7 +67,11 @@ class player:
         if type(self.count) is int:
             if self.count > 0:
                 response = requests.get(f'{self.URL}/{str(self.count)}')
-                self.players_data = json.loads(response.text)
+                
+                if response.status_code == 200:
+                    self.players_data = json.loads(response.text)
+                else:
+                    self.players_data = StaticPlayers().getPlayers(self.count)
 
                 while(self.checkDuplicatePlayer()):
                     self.removeDuplicatePlayer()
@@ -84,16 +89,15 @@ class player:
         self.players_data = self.players_data + new_data
 
 
-class seeker:
+class Seeker:
 
     def __init__(self):
         self.message = ''
         pass
 
     def trySeek(self, row, col, gameKey):
-        encdata = gameKey.split(',')
         aes = AESCrypto()
-        keyData = aes.Decrypt(encData[0], encData[1], encData[2])
+        keyData = aes.Decrypt(gameKey[0], gameKey[1], gameKey[2])
 
         keyDatas = keyData.split(':')   # gameKey = hider:row:col
         hider = keyDatas[0]

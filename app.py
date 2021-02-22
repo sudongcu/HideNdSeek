@@ -1,5 +1,7 @@
 from flask import Flask, render_template, jsonify, request
-from playgame import game, seeker
+from urllib import parse
+
+from main.game.playgame import Game, Seeker
 
 
 app = Flask(__name__)
@@ -14,28 +16,28 @@ def start():
     row = int(request.args['row'])
     col = int(request.args['col'])
 
-    g = game(row, col)  
+    g = Game(row, col)  
     g.setGame()
 
-    data = {'map':g.game_map, 'hider':g.hider, 'gameKey':g.gameKey}
+    data = {'map': g.game_map, 'hider': g.hider, 'gameKey': { 'key':g.gameKey[0], 'tag': g.gameKey[1], 'nonce':g.gameKey[2] } }
     return jsonify(data)
 
-@app.route('/seek', methods = ['GET', 'POST'])
+@app.route('/seek', methods = ['POST'])
 def seek():
-    row = int(request.args['row'])
-    col = int(request.args['col'])
+    data = request.get_json()
     
-    #TODO: POST로 값 받기 
-    gameKey = request.form['gameKey']
-    
-    print(gameKey)
+    row = data['row']
+    col = data['col']
+    tempKey = data['gameKey']
+    gameKey = [parse.unquote(tempKey['key']), parse.unquote(tempKey['tag']), parse.unquote(tempKey['nonce'])]
 
-    s = seeker()
+    s = Seeker()
     code = '0' if s.trySeek(row, col,  gameKey) else '1'
     message = s.message
     
     data = {'code':code, 'message':message}
     return  jsonify(data)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
