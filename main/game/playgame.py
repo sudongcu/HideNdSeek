@@ -4,6 +4,7 @@ from main.data.staticplayers import StaticPlayers
 import requests
 import json
 import random
+import math
 
 class Game:
 
@@ -95,38 +96,38 @@ class Seeker:
         self.message = ''
         pass
 
-    def trySeek(self, row, col, gameKey):
+    def trySeek(self, row, col, mapRow, mapCol, gameKey):
         aes = AESCrypto()
         keyData = aes.Decrypt(gameKey[0], gameKey[1], gameKey[2])
 
         keyDatas = keyData.split(':')   # gameKey = hider:row:col
         hider = keyDatas[0]
-        rowdistance = int(keyDatas[1]) - row 
+        rowdistance = int(keyDatas[1]) - row
         coldistance = int(keyDatas[2]) - col
         
         if rowdistance == 0 and coldistance == 0:
-            self.message = f"You sought '{hider}'."
+            self.message = f"You found '{hider}'."
             return True
         else:
-            self.message = f'Row: {self.rowMessage(rowdistance, row)}\rCol: {self.colMessage(coldistance, col)}'
+            self.message = f'Row: {self.rowMessage(rowdistance, mapRow)}\rCol: {self.colMessage(coldistance, mapCol)}'
             return False
 
     def rowMessage(self, distance, row):
-        if abs(distance) > (row / 3) * 3:
+        if abs(distance) >= math.trunc(math.trunc(row / 3) * 3):
             return 'far'
-        elif abs(distance) > (row / 3) * 2:
+        elif abs(distance) >= math.trunc(math.trunc(row / 3) * 2):
             return 'little far'
-        elif abs(distance) > (row / 3):
-            return 'closed'
+        elif abs(distance) >= math.trunc(row / 3):
+            return 'close'
         else:
-            return 'very closed'
+            return 'far close'
         
     def colMessage(self, distance, col):
-        if abs(distance) > (col / 3) * 3:
+        if abs(distance) >= math.trunc(math.trunc(col / 3) * 3):
             return 'far'
-        elif abs(distance) > (col / 3) * 2:
+        elif abs(distance) >= math.trunc(math.trunc(col / 3) * 2):
             return 'little far'
-        elif abs(distance) > (col / 3):
-            return 'closed'
+        elif abs(distance) >= math.trunc(col / 3):
+            return 'close'
         else:
-            return 'very closed'
+            return 'far close'
