@@ -28,11 +28,13 @@ def seek():
     
     row = data['row']
     col = data['col']
+    mapRow = data['mapRow']
+    mapCol = data['mapCol']
     tempKey = data['gameKey']
     gameKey = [parse.unquote(tempKey['key']), parse.unquote(tempKey['tag']), parse.unquote(tempKey['nonce'])]
 
     s = Seeker()
-    code = '0' if s.trySeek(row, col,  gameKey) else '1'
+    code = '0' if s.trySeek(row, col, int(mapRow), int(mapCol), gameKey) else '1'
     message = s.message
     
     data = {'code':code, 'message':message}
@@ -40,4 +42,4 @@ def seek():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5050, debug=False)

@@ -1,3 +1,5 @@
+const port = '5050';
+
 let isGameStartValid = function (row, col) {
 
     const minvalue = 3;
@@ -41,9 +43,12 @@ let gameStart = function () {
     
     if (!isGameStartValid(row,  col))
         return;
-    
+
+    $("#hiddenRow").val(row);
+    $("#hiddenCol").val(col);
+
     $.ajax({
-        url: 'http://' + document.domain + ':5000/start?row=' + row + '&col=' + col,
+        url: 'http://' + document.domain + ':' + port + '/start?row=' + row + '&col=' + col,
         type: 'get',
         contentType: 'application/json',
         success: function (data) {
@@ -151,11 +156,13 @@ let trySeek = function (row, col) {
     const postdata = {
         'row': row,
         'col': col,
+        'mapRow': $('#hiddenRow').val(),
+        'mapCol': $('#hiddenCol').val(),
         'gameKey': { 'key': key, 'tag': tag, 'nonce': nonce }
     };
 
     $.ajax({
-        url: 'http://' + document.domain + ':5000/seek',
+        url: 'http://' + document.domain + ':' + port + '/seek',
         type: 'post',
         data: JSON.stringify(postdata),
         dataType: "json",

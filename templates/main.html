@@ -8,10 +8,12 @@
     <title>Hide & Seek!</title>
     <link rel="stylesheet" href="/static/css/hidendseek.css?v=3">
     <script src="/static/js/jquery-3.5.1.min.js"></script>
-    <script src="/static/js/hidendseek.js?v=3"></script>
+    <script src="/static/js/hidendseek.js?v=4"></script>
 </head>
 <body>
     <div id="divSetting" class="on">
+        <input type="hidden" id="hiddenRow" value="" />
+        <input type="hidden" id="hiddenCol" value="" />
         <input type="text" id="textRow" class="textinput" maxlength="2" value="" placeholder="row">
         <input type="text" id="textCol" class="textinput" maxlength="2" value="" placeholder="col">
         <input type="button" class="button" value="Start" onclick="gameStart();" />
@@ -20,7 +22,7 @@
         <input type="hidden" id="hiddenKey" value="" />
         <input type="hidden" id="hiddenTag" value="" />
         <input type="hidden" id="hiddenNonce" value="" />
-        <p>You should seek <b><span id="hider" class="labelhider"></span></b></p>
+        <p>You should find <b><span id="hider" class="labelhider"></span></b></p>
         <table id="tableMap">
         </table>
     </div>
