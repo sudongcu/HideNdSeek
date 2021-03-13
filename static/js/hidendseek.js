@@ -141,7 +141,10 @@ let drawMap = function (data) {
 
 let isTrySeekValid = function (row, col) {
     
-    return $("#box" + row + col).hasClass('hide-box');                
+    if ($("#divSetting").hasClass("on"))
+        return false;
+
+    return $("#box" + row + col).hasClass('hide-box');
 }
 
 let trySeek = function (row, col) {
