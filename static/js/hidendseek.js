@@ -193,7 +193,7 @@ let openBox = function (data, row, col) {
 
     if (code == '0') {
 
-        let hider = $('#hider').text().replace('_', '\n');
+        let hider = $('#hider').text().replace(/_/gi, '\n');
 
         $("#box" + row + col).attr('class', 'seek-box');
         $("#box" + row + col).html(hider);
