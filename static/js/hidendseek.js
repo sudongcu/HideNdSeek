@@ -2,33 +2,33 @@ const port = '5050';
 
 let isGameStartValid = function (row, col) {
 
-    const minvalue = 3;
+    const minvalue = 4;
     const maxvalue = 10;
 
     if (row == undefined || row == null || row == ''
         || col == undefined || col == null || col == '') {
-        alert('Empty value is not allowed');
+        alert('빈 값은 입력할 수 없다구.');
         return false;
     }
 
     if (row < minvalue) {
-        alert('Row\'s minimum value is 3');
+        alert(str(minvalue) + '이상의 값을 넣으라구.');
         $('#textRow').focus();
         return false;
     }
     if (col < minvalue) {
-        alert('Col\' minimum value is 3');
+        alert(str(minvalue) + '이상의 값을 넣으라구.');
         $('#textCol').focus();
         return false;
     }
 
     if (row > maxvalue) {
-        alert('Row\'s Maximum value is 10');
+        alert(str(maxvalue) + '이하의 값을 넣으라구.');
         $('#textRow').focus();
         return false;
     }
     if (col > maxvalue) {
-        alert('Col\'s Maximum value is 10');
+        alert(str(maxvalue) + '이하의 값을 넣으라구.');
         $('#textCol').focus();
         return false;
     }
@@ -55,7 +55,7 @@ let gameStart = function () {
             drawMap(data);
         },
         error: function (xtr, status, error) {
-            alert('Failed to get datas.');
+            alert('데이터를 가져오는데 실패해버렸네.');
         }
     });
 }
@@ -83,15 +83,15 @@ let drawMap = function (data) {
     });
 
     if (hider == undefined || hider == null || hider == '') {
-        alert('Service Error.\rRestart Game.');
+        alert('에러남...\r재시작 고고.');
         return;
     }
     if (map == undefined || map == null) {
-        alert('Map Error.\rRestart Game.');
+        alert('에러남ㅠㅠ\r제시작 고고.');
         return;
     }
     if (gameKey == undefined || gameKey == null) {
-        alert('GameKey Create Error.\rRestart Game.');
+        alert('게임키가 없어서 시작을 못하네...\r이럴땐 재시작 고고.');
         return;
     }
 
@@ -111,7 +111,7 @@ let drawMap = function (data) {
     });
 
     if (!checkGameKey) {
-        alert('GameKey Create Error.\rRestart Game.');
+        alert('게임키가 없어서 시작을 못하네...\r이럴땐 재시작 고고.');
         return;
     }
 
@@ -174,7 +174,7 @@ let trySeek = function (row, col) {
             openBox(data, row, col);
         },
         error: function (xtr, status, error) {
-            alert('Failed to get datas.');
+            alert('데이터를 가져오는데 실패해버렸네.');
         }
     });
 }
