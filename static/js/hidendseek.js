@@ -12,23 +12,23 @@ let isGameStartValid = function (row, col) {
     }
 
     if (row < minvalue) {
-        alert(str(minvalue) + '이상의 값을 넣으라구.');
+        alert(String(minvalue) + '이상의 값을 넣으라구.');
         $('#textRow').focus();
         return false;
     }
     if (col < minvalue) {
-        alert(str(minvalue) + '이상의 값을 넣으라구.');
+        alert(String(minvalue) + '이상의 값을 넣으라구.');
         $('#textCol').focus();
         return false;
     }
 
     if (row > maxvalue) {
-        alert(str(maxvalue) + '이하의 값을 넣으라구.');
+        alert(String(maxvalue) + '이하의 값을 넣으라구.');
         $('#textRow').focus();
         return false;
     }
     if (col > maxvalue) {
-        alert(str(maxvalue) + '이하의 값을 넣으라구.');
+        alert(String(maxvalue) + '이하의 값을 넣으라구.');
         $('#textCol').focus();
         return false;
     }
