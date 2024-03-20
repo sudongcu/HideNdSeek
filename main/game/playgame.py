@@ -106,7 +106,7 @@ class Seeker:
         coldistance = int(keyDatas[2]) - col
         
         if rowdistance == 0 and coldistance == 0:
-            self.message = f"'{hider}'를 찾았다규~!!!"
+            self.message = f"'{hider}'를 찾았다!!!"
             return True
         else:
             self.message = f'가로: {self.rowMessage(rowdistance, mapRow)}\r세로: {self.colMessage(coldistance, mapCol)}'
@@ -114,20 +114,20 @@ class Seeker:
 
     def rowMessage(self, distance, row):
         if abs(distance) >= math.trunc(math.trunc(row / 3) * 3):
-            return '개멀다ㅠㅠ'
+            return '어디까지 가는거야?'
         elif abs(distance) >= math.trunc(math.trunc(row / 3) * 2):
-            return '조금머네~'
+            return '생각 보다 멀지 않아.'
         elif abs(distance) >= math.trunc(row / 3):
-            return '가까이있어'
+            return '가까이있어.'
         else:
-            return '개가깝다!'
+            return '곧?!'
         
     def colMessage(self, distance, col):
         if abs(distance) >= math.trunc(math.trunc(col / 3) * 3):
-            return '개멀다ㅠㅠ'
+            return '어디까지 가는거야?'
         elif abs(distance) >= math.trunc(math.trunc(col / 3) * 2):
-            return '조금머네~'
+            return '생각 보다 멀지 않아.'
         elif abs(distance) >= math.trunc(col / 3):
-            return '가까이있어'
+            return '가까이있어.'
         else:
-            return '개가깝다!'
+            return '곧?!'

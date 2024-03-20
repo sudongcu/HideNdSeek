@@ -1,34 +1,34 @@
-const port = '5050';
+const port = '5000';
 
 let isGameStartValid = function (row, col) {
 
-    const minvalue = 4;
+    const minvalue = 5;
     const maxvalue = 10;
 
     if (row == undefined || row == null || row == ''
         || col == undefined || col == null || col == '') {
-        alert('빈 값은 입력할 수 없다구.');
+        alert('빈 값은 입력할 수 없다.');
         return false;
     }
 
     if (row < minvalue) {
-        alert(String(minvalue) + '이상의 값을 넣으라구.');
+        alert(String(minvalue) + '이상의 값 필요.');
         $('#textRow').focus();
         return false;
     }
     if (col < minvalue) {
-        alert(String(minvalue) + '이상의 값을 넣으라구.');
+        alert(String(minvalue) + '이상의 값 필요.');
         $('#textCol').focus();
         return false;
     }
 
     if (row > maxvalue) {
-        alert(String(maxvalue) + '이하의 값을 넣으라구.');
+        alert(String(maxvalue) + '이하의 값 필요.');
         $('#textRow').focus();
         return false;
     }
     if (col > maxvalue) {
-        alert(String(maxvalue) + '이하의 값을 넣으라구.');
+        alert(String(maxvalue) + '이하의 값 필요.');
         $('#textCol').focus();
         return false;
     }
@@ -55,7 +55,7 @@ let gameStart = function () {
             drawMap(data);
         },
         error: function (xtr, status, error) {
-            alert('데이터를 가져오는데 실패해버렸네.');
+            alert('데이터를 가져오는데 실패.');
         }
     });
 }
@@ -83,15 +83,15 @@ let drawMap = function (data) {
     });
 
     if (hider == undefined || hider == null || hider == '') {
-        alert('에러남...\r재시작 고고.');
+        alert('에러 발생...\r다시 시직.');
         return;
     }
     if (map == undefined || map == null) {
-        alert('에러남ㅠㅠ\r제시작 고고.');
+        alert('에러 발생.\r다시 시작.');
         return;
     }
     if (gameKey == undefined || gameKey == null) {
-        alert('게임키가 없어서 시작을 못하네...\r이럴땐 재시작 고고.');
+        alert('게임키 없음...\r다시 시작.');
         return;
     }
 
@@ -111,7 +111,7 @@ let drawMap = function (data) {
     });
 
     if (!checkGameKey) {
-        alert('게임키가 없어서 시작을 못하네...\r이럴땐 재시작 고고.');
+        alert('게임키 없음...\r다시 시작.');
         return;
     }
 
@@ -137,6 +137,28 @@ let drawMap = function (data) {
     
     $('#textRow').val('');
     $('#textCol').val('');
+    
+    repaintBoxes();
+}
+
+let repaintBoxes = function() {
+    var hideBoxes = document.getElementsByClassName('hide-box');    
+    var bottomColor = getRandomColor();
+    var rightColor = getRandomColor();
+    for (var i = 0; i < hideBoxes.length; i++) {
+        hideBoxes[i].style.borderBottomColor = bottomColor;
+        hideBoxes[i].style.borderRightColor = rightColor;
+    }
+}
+
+let getRandomColor = function() {
+
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
 }
 
 let isTrySeekValid = function (row, col) {
@@ -174,7 +196,7 @@ let trySeek = function (row, col) {
             openBox(data, row, col);
         },
         error: function (xtr, status, error) {
-            alert('데이터를 가져오는데 실패해버렸네.');
+            alert('데이터를 가져오는데 실패.');
         }
     });
 }
