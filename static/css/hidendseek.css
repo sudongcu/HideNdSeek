@@ -27,8 +27,13 @@
     cursor: pointer;
 }
 
-.hiderLabel {
+.hider-label {
     background-color: gold;
+    padding: 5px;
+}
+
+.message-label {
+    background-color: lightgray;
     padding: 5px;
 }
 

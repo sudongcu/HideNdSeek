@@ -96,38 +96,28 @@ class Seeker:
         self.message = ''
         pass
 
-    def trySeek(self, row, col, mapRow, mapCol, gameKey):
+    def trySeek(self, row, col, map_row, map_col, game_key):
         aes = AESCrypto()
-        keyData = aes.Decrypt(gameKey[0], gameKey[1], gameKey[2])
+        key_data = aes.Decrypt(game_key[0], game_key[1], game_key[2])
 
-        keyDatas = keyData.split(':')   # gameKey = hider:row:col
-        hider = keyDatas[0]
-        rowdistance = int(keyDatas[1]) - row
-        coldistance = int(keyDatas[2]) - col
+        key_datas = key_data.split(':')   # gameKey = hider:row:col
+        hider = key_datas[0]
+        hider_row = int(key_datas[1])
+        hider_col = int(key_datas[2])
         
-        if rowdistance == 0 and coldistance == 0:
+        distance = math.sqrt((row - hider_row) ** 2 + (col - hider_col) ** 2)
+
+        if distance == 0:
             self.message = f"'{hider}'를 찾았다!!!"
             return True
         else:
-            self.message = f'가로: {self.rowMessage(rowdistance, mapRow)}\r세로: {self.colMessage(coldistance, mapCol)}'
+            self.message = self.distanceMessage(distance, map_row, map_col)
             return False
 
-    def rowMessage(self, distance, row):
-        if abs(distance) >= math.trunc(math.trunc(row / 3) * 3):
+    def distanceMessage(self, distance, map_row, map_col):
+        if distance >= math.sqrt((map_row / 3) ** 2 + (map_col / 3) ** 2):
             return '어디까지 가는거야?'
-        elif abs(distance) >= math.trunc(math.trunc(row / 3) * 2):
-            return '생각 보다 멀지 않아.'
-        elif abs(distance) >= math.trunc(row / 3):
-            return '가까이있어.'
+        elif distance >= math.sqrt((map_row / 6) ** 2 + (map_col / 6) ** 2):
+            return '나쁘지않아.'
         else:
-            return '곧?!'
-        
-    def colMessage(self, distance, col):
-        if abs(distance) >= math.trunc(math.trunc(col / 3) * 3):
-            return '어디까지 가는거야?'
-        elif abs(distance) >= math.trunc(math.trunc(col / 3) * 2):
-            return '생각 보다 멀지 않아.'
-        elif abs(distance) >= math.trunc(col / 3):
             return '가까이있어.'
-        else:
-            return '곧?!'

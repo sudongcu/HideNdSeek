@@ -223,6 +223,7 @@ let openBox = function (data, row, col) {
         $("#box" + row + col).attr('class', 'seek-box');
         $("#box" + row + col).html(hider);
         alert(message);
+        $("#message").html(message);
         
         $('#divSetting').attr('class', 'on');
         $('#textRow').focus();
@@ -230,5 +231,6 @@ let openBox = function (data, row, col) {
     else {
         $("#box" + row + col).attr('class', 'show-box');
         alert(message);
+        $("#message").html(message);
     }
 }
