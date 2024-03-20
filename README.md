@@ -1,5 +1,10 @@
 # HideNdSeek
-Hide and Seek Game
+Simple Hide and Seek Game
 
-# Docker Run
-docker run -d --name hidendseek -p 5000:5000 sudongcu/hidendseek:{tag}
+## Docker
+[Docker Hub](https://hub.docker.com/repository/docker/sudongcu/hidendseek/general)
+```
+docker pull sudongcu/hidendseek:latest
+```
+
+ps. python 처음 공부하면서 만들어본 샘플
