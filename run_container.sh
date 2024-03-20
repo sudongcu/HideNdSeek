@@ -1,1 +1,1 @@
-docker run -p 5050:5050 hidendseek:latest
+docker run -p 5000:5000 hidendseek:latest

@@ -3,4 +3,7 @@ Jinja2==2.11.3
 pycryptodome==3.10.1
 pycryptodomex==3.10.1
 urllib3==1.26.3
-requests==2.25.1
+requests==2.31.0
+markupsafe==2.0.1
+itsdangerous==2.0.1
+werkzeug==2.0.1
