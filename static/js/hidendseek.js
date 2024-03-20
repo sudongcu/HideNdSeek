@@ -1,4 +1,4 @@
-const port = '5050';
+const port = '5000';
 
 let isGameStartValid = function (row, col) {
 
