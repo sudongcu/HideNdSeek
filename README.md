@@ -7,4 +7,4 @@ Simple Hide and Seek Game
 docker pull sudongcu/hidendseek:latest
 ```
 
-ps. python 처음 공부하면서 만들어본 샘플
+ps. first python project during studying python.
