@@ -138,6 +138,8 @@ let drawMap = function (data) {
     $('#textRow').val('');
     $('#textCol').val('');
     
+    $("#message").html('');
+    
     repaintBoxes();
 }
 
@@ -222,7 +224,6 @@ let openBox = function (data, row, col) {
 
         $("#box" + row + col).attr('class', 'seek-box');
         $("#box" + row + col).html(hider);
-        alert(message);
         $("#message").html(message);
         
         $('#divSetting').attr('class', 'on');
@@ -230,7 +231,7 @@ let openBox = function (data, row, col) {
     }
     else {
         $("#box" + row + col).attr('class', 'show-box');
-        alert(message);
         $("#message").html(message);
+        alert(message);
     }
 }
