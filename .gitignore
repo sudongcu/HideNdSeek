@@ -2,3 +2,4 @@
 __pycache__/
 .vscode/
 main/game/__pycache__/playgame.cpython-38.pyc
+.venv/

@@ -9,7 +9,7 @@
 .textinput {
     padding: 15px 20px;
     font-size: 20px;
-    width: 40px;
+    width: 60px;
 }
 
 .button {
@@ -39,10 +39,12 @@
 
 .hide-box {
     cursor: pointer;
-    width: 0px;
-    height: 0px;
-    border-bottom:100px solid darkgoldenrod;
-    border-right:100px solid darksalmon; 
+    display: inline-block;
+    width: 95px;
+    height: 95px;
+    border: 1px solid #000;
+    position: relative;
+    background: linear-gradient(135deg, var(--b1, darkgoldenrod) 0 50%, var(--b2, darksalmon) 50% 100%);
 }
 
 .show-box {
@@ -53,6 +55,7 @@
     font-weight: bold;
     text-align: center;
     vertical-align: middle;
+    position: relative;
 }
 
 .seek-box {
@@ -64,4 +67,269 @@
     text-align: center;
     vertical-align: middle;
     background-color: gold;
+    position: relative;
 }
+
+/* Path footprint markers (after returning to grid) */
+.hide-box.path::after, .show-box.path::after, .seek-box.path::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--pathColor, #0a84ff);
+    border: 2px solid var(--pathRing, #fff);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--pathColor, #0a84ff) 40%, transparent);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+}
+
+/* Directional arrow (uses ::before to avoid clashing with dot ::after) */
+.hide-box.path.arrow-up::before, .show-box.path.arrow-up::before, .seek-box.path.arrow-up::before,
+.hide-box.path.arrow-down::before, .show-box.path.arrow-down::before, .seek-box.path.arrow-down::before,
+.hide-box.path.arrow-left::before, .show-box.path.arrow-left::before, .seek-box.path.arrow-left::before,
+.hide-box.path.arrow-right::before, .show-box.path.arrow-right::before, .seek-box.path.arrow-right::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    z-index: 3;
+    filter: drop-shadow(0 0 1px #fff);
+}
+
+.hide-box.path.arrow-up::before, .show-box.path.arrow-up::before, .seek-box.path.arrow-up::before {
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 12px solid var(--pathColor, #0a84ff);
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.hide-box.path.arrow-down::before, .show-box.path.arrow-down::before, .seek-box.path.arrow-down::before {
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 12px solid var(--pathColor, #0a84ff);
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.hide-box.path.arrow-left::before, .show-box.path.arrow-left::before, .seek-box.path.arrow-left::before {
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 12px solid var(--pathColor, #0a84ff);
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.hide-box.path.arrow-right::before, .show-box.path.arrow-right::before, .seek-box.path.arrow-right::before {
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 12px solid var(--pathColor, #0a84ff);
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Found location fill: replace cell background with gem on black */
+.hide-box.found-fill, .show-box.found-fill, .seek-box.found-fill {
+    background: #fff;
+    background-image: var(--gem, url('/static/img/gem.png'));
+    background-size: cover; /* fill the box */
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* immersive explore mode */
+#divGame.on #tableMap {
+    perspective: 800px;
+    transition: transform 0.6s ease, filter 0.6s ease;
+}
+
+#divGame.on.explore #tableMap {
+    transform: scale(1.05) rotateX(10deg);
+    filter: saturate(1.2);
+}
+
+.show-box, .seek-box {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.show-box:hover {
+    transform: translateZ(5px);
+}
+
+/* first-person viewport */
+.viewport {
+    position: relative;
+    display: none;
+    width: 100%;
+    max-width: 680px;
+    height: 420px;
+    margin: 8px 0 16px 0;
+    border: 6px solid #000;
+    overflow: hidden;
+    background: #1a1a1a; /* neutral center */
+    perspective: 900px;
+}
+
+.room { position: absolute; inset: 0; transition: transform 300ms ease; }
+
+.panel, .floor, .void, .ceiling {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0.98;
+    z-index: 1;
+}
+
+/* Beveled white walls with thick black edges, matching the reference */
+.panel { box-shadow: none; }
+/* Top/Bottom as solid bars in color1 */
+.panel-top { position: absolute; inset: 0; background: var(--c1, #ddd); clip-path: polygon(0% 0%, 100% 0%, 70% 30%, 30% 30%); }
+.panel-bottom { position: absolute; inset: 0; background: var(--c1, #ddd); clip-path: polygon(0% 100%, 100% 100%, 70% 70%, 30% 70%); }
+/* Left/Right as solid bars in color2 */
+.panel-left { position: absolute; inset: 0; background: var(--c2, #555); clip-path: polygon(0% 0%, 30% 30%, 30% 70%, 0% 100%); }
+.panel-right { position: absolute; inset: 0; background: var(--c2, #555); clip-path: polygon(100% 0%, 100% 100%, 70% 70%, 70% 30%); }
+/* Front/Back faces unused in square mode */
+.ceiling, .floor { display: none; }
+.void { display: none; }
+
+.minimap {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    width: 160px;
+    height: 160px;
+    border: 1px solid #555;
+    background: rgba(255,255,255,0.85);
+}
+
+/* Explore mode: full-screen viewport overlay */
+#divGame.on.explore .viewport {
+    display: block;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    border: 0;
+    background: var(--bgColor, #000); /* black or danger tint */
+    z-index: 9000;
+}
+#divGame.on.explore #tableMap { display: none; }
+#divGame.on.explore .minimap { width: 260px; height: 260px; }
+
+/* Completed game: disable grid interactions */
+#divGame.completed #tableMap { pointer-events: none; }
+#divGame.completed .hide-box { cursor: not-allowed; }
+
+/* Zoom-in animation when entering explore */
+#divGame.on.explore .room { animation: zoomIn 800ms ease both; }
+@keyframes zoomIn {
+    0% { transform: scale(0.6) translateZ(-220px) rotateX(25deg); filter: brightness(0.9); }
+    100% { transform: scale(1) translateZ(0) rotateX(0deg); filter: brightness(1); }
+}
+
+/* Square interior mode: keep panels flat to show colors */
+#viewport { --depth: 180px; }
+.panel-top, .panel-bottom, .panel-left, .panel-right, .ceiling, .floor { transform: none; }
+
+/* Inner square (center void) */
+#viewport { --inset: 30%; }
+.inner {
+    position: absolute;
+    top: var(--inset);
+    left: var(--inset);
+    right: var(--inset);
+    bottom: var(--inset);
+    background: var(--innerColor, #111);
+    border: 6px solid #000;
+    z-index: 2;
+    pointer-events: none;
+}
+
+
+/* Game over cell fill: replace cell background with monster on black */
+.hide-box.monster-fill, .show-box.monster-fill, .seek-box.monster-fill {
+    background: #000;
+    background-image: var(--monster);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Steps HUD at center */
+.hud-steps {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    font-size: 120px;
+    line-height: 1;
+    font-weight: 800;
+    color: var(--hudColor, #fff);
+    text-shadow: 0 0 12px rgba(0,0,0,0.9), 0 0 32px rgba(255,255,255,0.15);
+    letter-spacing: 2px;
+    user-select: none;
+    pointer-events: none;
+}
+
+/* Found overlay (one-time full-screen gem) */
+.found-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 200ms ease-out both;
+}
+.found-overlay img {
+    width: 100vw;
+    height: 100vh;
+    object-fit: contain;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Ensure the final found cell shows only the gem, not path/arrow marks */
+.found-fill.path::after, .found-fill.arrow-up::before, .found-fill.arrow-down::before, .found-fill.arrow-left::before, .found-fill.arrow-right::before {
+    content: none !important;
+}
+
+/* Movement animations */
+.room .panel, .room .inner { transition: transform 160ms ease, filter 160ms ease; }
+.room .inner { transition: transform 160ms ease, filter 160ms ease, background 250ms ease, background-color 250ms ease; }
+
+/* Move Up */
+.room.move-up .inner { transform: translateY(-10px) scale(1.01); }
+.room.move-up .panel-top { transform: translateY(-10px); filter: brightness(1.08); }
+.room.move-up .panel-bottom { transform: translateY(6px); filter: brightness(0.92); }
+.room.move-up .panel-left, .room.move-up .panel-right { transform: translateY(-3px); }
+
+/* Move Down */
+.room.move-down .inner { transform: translateY(10px) scale(1.01); }
+.room.move-down .panel-bottom { transform: translateY(10px); filter: brightness(1.08); }
+.room.move-down .panel-top { transform: translateY(-6px); filter: brightness(0.92); }
+.room.move-down .panel-left, .room.move-down .panel-right { transform: translateY(3px); }
+
+/* Move Left */
+.room.move-left .inner { transform: translateX(-10px) scale(1.01); }
+.room.move-left .panel-left { transform: translateX(-10px); filter: brightness(1.08); }
+.room.move-left .panel-right { transform: translateX(6px); filter: brightness(0.92); }
+.room.move-left .panel-top, .room.move-left .panel-bottom { transform: translateX(-3px); }
+
+/* Move Right */
+.room.move-right .inner { transform: translateX(10px) scale(1.01); }
+.room.move-right .panel-right { transform: translateX(10px); filter: brightness(1.08); }
+.room.move-right .panel-left { transform: translateX(-6px); filter: brightness(0.92); }
+.room.move-right .panel-top, .room.move-right .panel-bottom { transform: translateX(3px); }
+
+/* Entry pulse */
+.room.pulse .inner { transform: scale(1.04); }
