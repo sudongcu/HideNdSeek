@@ -313,8 +313,11 @@ document.addEventListener('keydown', function (e) {
     if (!PATH.length || PATH[PATH.length - 1].r !== nr || PATH[PATH.length - 1].c !== nc) {
         PATH.push({ r: nr, c: nc });
     }
+
+    playFootstep();
     animateMove(nr, nc, key);
     drawMinimap();
+    
     // ask server for hint at new position
     requestHintAt(nr, nc);
 });
@@ -356,6 +359,8 @@ document.addEventListener('touchend', function(e) {
     if (!PATH.length || PATH[PATH.length - 1].r !== nr || PATH[PATH.length - 1].c !== nc) {
         PATH.push({ r: nr, c: nc });
     }
+    
+    playFootstep();
     animateMove(nr, nc, key);
     drawMinimap();
     requestHintAt(nr, nc);
@@ -457,8 +462,12 @@ function requestHintAt(r, c) {
             if (data && (typeof data.steps === 'number' || typeof data.distance === 'number')) {
                 const hud = document.getElementById('hudSteps');
                 if (hud) {
-                    const steps = (typeof data.steps === 'number') ? data.steps : Math.round(data.distance);
-                    hud.textContent = steps > 0 ? String(steps) : '0';
+                    if (data.danger === true) {
+                        hud.textContent = '?';
+                    } else {
+                        const steps = (typeof data.steps === 'number') ? data.steps : Math.round(data.distance);
+                        hud.textContent = steps > 0 ? String(steps) : '0';
+                    }
                 }
             }
             if (data && data.monsterPos && Array.isArray(data.monsterPos) && data.monsterPos.length === 2) {
@@ -471,9 +480,11 @@ function requestHintAt(r, c) {
                     if (data.danger) {
                         vp.style.setProperty('--bgColor', 'linear-gradient(0deg, rgba(180, 0, 0, 1) 0%, #a10 100%)');
                         vp.style.setProperty('--innerColor', 'linear-gradient(180deg, #942121ff 0%, #be0000ff 80%)');
+                        playRumble();
                     } else {
                         vp.style.setProperty('--bgColor', '#000');
                         vp.style.setProperty('--innerColor', '#111');
+                        stopRumble();
                     }
                 }
             }
@@ -496,6 +507,9 @@ function finalizeFound(r, c) {
     EXPLORE_MODE = false;
     $("#divGame").removeClass('explore');
     $("#divGame").addClass('completed');
+    
+    stopRumble();
+    
     const hud = document.getElementById('hudSteps');
     if (hud) hud.textContent = '';
     // paint path with arrows
@@ -540,6 +554,7 @@ function gameOverAt(r, c) {
     EXPLORE_MODE = false;
     $("#divGame").removeClass('explore');
     $("#divGame").addClass('completed');
+    stopRumble();
     const hud = document.getElementById('hudSteps');
     if (hud) hud.textContent = '';
     // paint path with arrows
@@ -708,4 +723,36 @@ function extractUrl(cssVal) {
         url = url.slice(1, -1);
     }
     return url;
+}
+
+// Sound Controls
+function playFootstep() {
+    const a = document.getElementById('audioFootstep');
+    if (!a) return;
+    try {
+        a.currentTime = 0;
+        a.play().catch(() => { /* ignore */ });
+    } catch (e) {}
+}
+
+function playRumble() {
+    const a = document.getElementById('audioRumble');
+    if (!a) return;
+    try {
+        if (a.paused) {
+            a.currentTime = 0;
+            a.play().catch(() => { /* ignore */ });
+        }
+    } catch (e) {}
+}
+
+function stopRumble() {
+    const a = document.getElementById('audioRumble');
+    if (!a) return;
+    try {
+        if (!a.paused) {
+            a.pause();
+            a.currentTime = 0;
+        }
+    } catch (e) {}
 }
